@@ -1,14 +1,7 @@
+import React, { useState } from 'react';
+import { Button, StatusBar, StyleSheet, Text, TextInput, View, BackHandler } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
-import {
-	Button,
-	StatusBar,
-	StyleSheet,
-	Text,
-	TextInput,
-	View,
-} from 'react-native';
 
 const weatherOptions = {
 	Clear: {
@@ -73,55 +66,68 @@ const weatherOptions = {
 	},
 };
 
-export default function Weather({
-	temp,
-	name,
-	condition,
-	setWeather,
-}) {
+export default function Weather({ temp, name, condition, setWeather, resetWeather }) {
 	const [query, setQuery] = useState('');
-
+	
+	const handleExitApp = () => {
+		BackHandler.exitApp();
+	}
+	
 	return (
 		<LinearGradient
-			colors={weatherOptions[condition].gradient}
-			style={styles.mainContainer}
+		colors={weatherOptions[condition].gradient}
+		style={styles.mainContainer}
 		>
-			<StatusBar barStyle={'light-content'} />
-			<View style={styles.container}>
-				<MaterialCommunityIcons
-					name={weatherOptions[condition].iconName}
-					size={96}
-					color={'white'}
-				/>
-				<View style={styles.flex}>
-					<Text style={styles.temp}>{temp}° </Text>
-					<Text style={styles.temp}>| {name}</Text>
-				</View>
-			</View>
-			<View style={{ ...styles.container, ...styles.textContainer }}>
-				<Text style={styles.title}>
-					{weatherOptions[condition].title}
-				</Text>
-				<Text style={styles.description}>
-					{weatherOptions[condition].description}
-				</Text>
-				<View style={styles.searchContainer}>
-					<TextInput
-						placeholder='City'
-						style={styles.input}
-						value={query}
-						onChangeText={text => setQuery(text)}
-					/>
-					<Button
-						title='Search'
-						style={styles.btn}
-						onPress={() => setWeather(query)}
-					/>
-				</View>
-			</View>
+		<StatusBar barStyle={'light-content'} />
+		<View style={styles.container}>
+		<MaterialCommunityIcons
+		name={weatherOptions[condition].iconName}
+		size={90}
+		color={'white'}
+		/>
+		<View style={styles.flex}>
+		<Text style={styles.temp}>{temp}° </Text>
+		<Text style={styles.temp}>| {name}</Text>
+		</View>
+		</View>
+		<View style={{ ...styles.container, ...styles.textContainer }}>
+		<Text style={styles.title}>
+		{weatherOptions[condition].title}
+		</Text>
+		<Text style={styles.description}>
+		{weatherOptions[condition].description}
+		</Text>
+		<View style={styles.searchContainer}>
+		<TextInput
+		placeholder='City'
+		style={styles.input}
+		value={query}
+		onChangeText={text => setQuery(text)}
+		/>
+		<Button
+		title='Search'
+		style={styles.btn}
+		onPress={() => setWeather(query)}
+		/>
+		</View>
+		<View style={styles.buttonContainer}>
+			<Button
+			title="Start Again"
+			onPress={resetWeather}
+			color="#4CAF50"
+			/>
+			<Button
+			title="Exit App"
+			onPress={handleExitApp}
+			color="#ff6347"
+			/>
+		</View>
+		</View>
 		</LinearGradient>
 	);
 }
+
+
 
 const styles = StyleSheet.create({
 	mainContainer: {
@@ -131,31 +137,33 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		marginTop: 30,
 	},
 	temp: {
-		fontSize: 42,
+		fontSize: 33,
 		color: 'white',
 	},
 	flex: {
+		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center',
+		marginTop: -25,
 	},
 	textContainer: {
-		paddingHorizontal: 40,
-		flex: 1,
+		paddingHorizontal: 30,
+		flex: 2,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 	},
 	title: {
 		color: 'white',
-		fontSize: 44,
-		fontWeight: '300',
-		marginBottom: 10,
+		fontSize: 38,
+		fontWeight: '400',
 		textAlign: 'left',
 	},
 	description: {
 		color: 'white',
-		fontWeight: '600',
+		fontWeight: '300',
 		fontSize: 24,
 		textAlign: 'left',
 	},
@@ -164,11 +172,18 @@ const styles = StyleSheet.create({
 		width: '100%',
 		padding: 10,
 		marginTop: 10,
+		marginBottom: 10,
 		position: 'relative',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		borderRadius: 5,
+	},
+	buttonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		gap: 10,
 	},
 	input: {
 		width: '70%',
