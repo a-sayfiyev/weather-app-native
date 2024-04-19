@@ -28,21 +28,19 @@ export default function App() {
 	};
 
 	const getLocation = async () => {
+		setIsLoading(true);
 		try {
-			const { status } =
-				await Location.requestForegroundPermissionsAsync();
+			const { status } = await Location.requestForegroundPermissionsAsync();
 			if (status !== 'granted') {
 				Alert.alert('Permission to access location was denied');
 				return;
 			}
 
-			const {
-				coords: { latitude, longitude },
-			} = await Location.getCurrentPositionAsync({});
-
+			const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
 			getWeather(latitude, longitude);
 		} catch (error) {
-			Alert.alert("I can't find your current location, so bad ):");
+			Alert.alert("Can't find your current location.");
+			setIsLoading(false);
 		}
 	};
 
@@ -55,11 +53,10 @@ export default function App() {
 	) : (
 		<Weather
 			setWeather={setWeather}
+			resetWeather={getLocation}
 			temp={location.main.temp}
 			name={location.name}
 			condition={location.weather[0].main}
 		/>
 	);
 }
-
-const styles = StyleSheet.create({});
